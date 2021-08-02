@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Weather App</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300&display=swap');
+
+
+body{
+    font-family: 'Quicksand';
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+    height: 100vh;
+    width: 100vh;
+    height: 100%;
+
+}
+
+.box{
+    background-color: rgb(131, 212, 236);
+    width: 20vw;
+    height: 60vh;
+    border-radius: 5%;
+    box-shadow: 0px 4px 6px gray;
+    position: relative;
+    overflow: hidden;
+    min-height: 35rem;
+    min-width: 20rem;
+    
+
+}
+
+@keyframes wave {
+    from{transform:rotate(0deg);}
+    to{ transform:rotate(360deg);}
+}
+
+.wave-one{
+    animation: wave 4s infinite;
+    background-color: #D5E2F1; opacity: .8;
+    width: 460px; height: 460px;
+    position: absolute; top: 64%; border-radius: 40%;
+    
+}
+
+.wave-two{
+    animation: wave 4s infinite;
+    background-color: #D5E2F1;
+    width: 400px; height: 400px;
+    position: absolute; top: 64%; right:20%; border-radius: 40%;
+}
+
+.wave-three{
+    animation: wave 4s infinite;
+
+    background-color: #D5E2F1;
+    width: 500px; height: 500px;
+    position: absolute; top: 64%; border-radius: 40%;
+}
+
+@keyframes large{
+    from{
+        transform:scale(0.8);
+    }
+    to{
+        transform: scale(1.2);
+    }
+}
+
+#weathercon{
+    animation: large 2s infinite;
+    margin-top: 10rem;
+    font-size: 62px;
+}
+
+.info{
+    position: absolute;
+    bottom:0;
+    width: 100%;
+    height: 55%;
+    z-index: 4;   
+}
+.fa-street-view{
+    animation: rotate 3s linear infinite alternate;
+}
+@keyframes rotate{
+    from{
+        transform: translateX(0.5rem);
+    }
+    to{
+        transform: translateX(-0.5rem);
+    }
+}
+
+
+.fa-street-view{
+    animation: rotate 4s infinite alternate;
+}
+.location{
+   
+    margin-top: 1rem;
+text-align: center; font-weight: 900;
+ font-size: 20px;
+
+}
+#date{ 
+    font-weight: 700;
+    margin-top: 0.5rem; color: gray;
+    text-align: center; text-transform: uppercase;
+}
+.temp{
+    font-weight: 600; text-align: center;
+
+}
+
+
+.maxtemp{
+    color: gray; text-align: center; 
+}
+
+@media (max-width: 600px){
+    .box{
+        width: 90vw; height: 80vh;
+    }
+    
+}
+    </style>
+    
+</head>
+<body>
+    <div class="box">
+        <div class="wave-one"></div>
+        <div class="wave-two"></div>
+        <div class="wave-three"></div>
+
+        <div id="weathercon">
+            <i class="fas fa-sun" style="color: yellow"></i>
+        </div>
+
+        <div class="info">
+            <p class="location">
+                <i class="fas fa-street-view" style="color: #fff"></i> {%location%}, {%country%}
+            </p>
+            <p id="date">WED | OCT 23 | 10:49AM</p>
+            <h1 class="temp">{%tempval%}&degC</h1>
+            <h3 class="maxtemp">Min {%tempmin%} | Max {%tempmax%}C</h3>
+        </div>
+    </div>
+    <script>
+        const currentDate = document.getElementById('date');
+        const weatherCon = document.getElementById("weathercon");
+
+        const tempStatus = "{%tempstatus%}";
+
+        if(tempStatus == "Sunny"){
+            weathercon.innerHTML = "<i class='fas fa-sun' style='color: #eccc68'></i>"
+        }else if(tempStatus == "Clouds"){
+            weathercon.innerHTML = "<i class='fas fa-cloud' style='color: #fff'></i>"
+        }else if(tempStatus == "Rainy"){
+            weathercon.innerHTML = "<i class='fas fa-cloud-rain' style='color: #a4b0be'></i>"
+        }else{
+            weathercon.innerHTML = "<i class='fas fa-cloud' style='color: #44c3de'></i>"
+        }
+        const getCurrentDay = ()=>{
+            
+            var weekday = new Array(7);
+            weekday[0] ="Sun";
+            weekday[1] ="Mon";
+            weekday[2] ="Tue";
+            weekday[3] ="Wed";
+            weekday[4] ="Thu";
+            weekday[5] ="Fri";
+            weekday[6] ="Sat";
+            let currentTime = new Date();
+            let day = weekday[currentTime.getDay()];
+            return day;
+        };
+       // getCurrentDay();
+        const getCurrentTime = ()=>{
+            var months = ["Jan","Feb","Mar","Apr","May","June","July","Aug","Sept","Oct","Nov","Dec"];
+            var now = new Date();
+            var month = months[now.getMonth()];
+            var date = now.getDate();
+
+            let hours = now.getHours();
+            let mins = now.getMinutes();
+
+            let periods = "AM";
+
+            if(hours > 11){
+                periods= "PM";
+                if(hours > 12) hours -= 12;
+            }
+            if(mins < 10){
+                mins = "0"+ mins;
+            }
+
+            return ` ${month}${date} | ${hours}:${mins}${periods}`;
+        };
+
+     currentDate.innerHTML =   getCurrentDay() + " |" + getCurrentTime(); 
+    </script>
+
+</body>
+</html>
